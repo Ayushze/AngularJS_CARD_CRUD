@@ -144,6 +144,7 @@ app.controller(
   }
 );
 
+// ContactListController
 app.controller(
   "ContactListController",
   function (
@@ -161,29 +162,19 @@ app.controller(
       $scope.contacts = UserService.getCurrentUserContacts();
     });
 
-    $scope.openModal = function (contact) {
-      if (modalInstance) {
-        modalInstance.dismiss('cancel');
-      }
+    // Open edit mode for the selected contact
+    $scope.editContact = function (contact) {
+      UserService.setCurrentContact(contact);
+      localStorage.setItem("editContactId", contact.id); // Set the editContactId in localStorage
+      $location.path("/add-edit-contact").search({ id: contact.id }); // Pass contact ID as query parameter
+      $scope.closeModal();
+    };
 
-      modalInstance = $uibModal.open({
-        templateUrl: "contact-details-modal.html",
-        controller: "ContactDetailsModalController",
-        resolve: {
-          contact: function () {
-            return contact;
-          },
-        },
-      });
-
-      modalInstance.result.then(
-        function (result) {
-          // Handle modal close if needed
-        },
-        function () {
-          // Handle modal dismissal if needed
-        }
-      );
+    // Open add new contact mode
+    $scope.addNewContact = function () {
+      localStorage.removeItem("editContactId"); // Clear editContactId from localStorage
+      $location.path("/add-edit-contact");
+      $scope.closeModal();
     };
 
     $scope.closeModal = function () {
@@ -197,75 +188,48 @@ app.controller(
       $location.path("/sign-in");
       $scope.closeModal();
     };
-
-    $scope.editContact = function (contact) {
-      UserService.setCurrentContact(contact);
-      $location.path("/add-edit-contact");
-      $scope.closeModal();
-    };
-
-    $scope.deleteContact = function (contact) {
-      UserService.deleteContact(contact);
-      $scope.closeModal();
-    };
-
-    $scope.exportData = function () {
-      alasql('SELECT * INTO XLSX("contact.xlsx",{headers:true}) FROM ?', [
-        UserService.getCurrentUserContacts(),
-      ]);
-      $scope.closeModal();
-    };
-
-    $scope.closeModalOnOtherButtonClick = function () {
-      $scope.closeModal();
-    };
   }
 );
 
-app.controller(
-  "ContactDetailsModalController",
-  function ($scope, $uibModalInstance, contact) {
-    $scope.contact = contact;
 
-    $scope.cancel = function () {
-      $uibModalInstance.dismiss("cancel");
-    };
-  }
-);
-
+// AddEditContactController
 app.controller(
   "AddEditContactController",
   function ($scope, $location, UserService, AuthService, $uibModal) {
+    // Initialize contact as empty object
     $scope.contact = {};
-    $scope.editing = false;
 
-    let currentContact = UserService.getCurrentContact();
-    if (currentContact) {
-      $scope.contact = angular.copy(currentContact);
-      $scope.editing = true;
-      UserService.clearCurrentContact();
+    // Check if there's an ID in the query params or localStorage indicating an edit mode
+    var editContactId = $location.search().id || localStorage.getItem("editContactId");
+
+    // If editContactId is present, load the contact details
+    if (editContactId) {
+      var contactToEdit = UserService.getCurrentUserContacts().find(function(contact) {
+        return contact.id === editContactId;
+      });
+      if (contactToEdit) {
+        $scope.contact = angular.copy(contactToEdit);
+      } else {
+        // If the contact with the given ID is not found, redirect to contact list
+        $location.path("/contact-list");
+      }
     }
 
+    // Function to save or add a new contact
     $scope.saveContact = function () {
-      UserService.saveContact($scope.contact, $scope.editing);
+      var editing = !!$scope.contact.id; // Check if contact has an ID (editing mode)
+      UserService.saveContact($scope.contact, editing);
       $location.path("/contact-list");
       $scope.closeModal();
     };
 
-    $scope.editContact = function (contact) {
-      $scope.contact = angular.copy(contact);
-      $scope.editing = true;
-      UserService.setCurrentContact(contact);
-      $location.path("/add-edit-contact").search({ id: contact.id });
+    // Function to handle cancel button click
+    $scope.cancel = function () {
+      $location.path("/contact-list");
       $scope.closeModal();
     };
 
-    $scope.logOut = function () {
-      AuthService.logOut();
-      $location.path("/sign-in");
-      $scope.closeModal();
-    };
-
+    // Function to handle image selection
     $scope.setImage = function (element) {
       let reader = new FileReader();
       reader.onload = function (e) {
@@ -276,11 +240,17 @@ app.controller(
       reader.readAsDataURL(element.files[0]);
     };
 
+    // Function to close modal
     $scope.closeModal = function () {
       if ($scope.$resolve.$uibModalInstance) {
         $scope.$resolve.$uibModalInstance.dismiss("cancel");
       }
     };
+
+    // Reset the contact object when navigating to the add new contact page
+    if (!$location.search().id) {
+      $scope.contact = {};
+    }
   }
 );
 
@@ -422,7 +392,3 @@ app.directive("contactCard", function () {
     },
   };
 });
-
-
-
-//complete ho gayi hai
