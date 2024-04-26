@@ -422,3 +422,7 @@ app.directive("contactCard", function () {
     },
   };
 });
+
+
+
+//complete ho gayi hai
