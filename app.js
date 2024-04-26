@@ -255,8 +255,9 @@ app.controller(
     $scope.editContact = function (contact) {
       $scope.contact = angular.copy(contact);
       $scope.editing = true;
+      UserService.setCurrentContact(contact);
       $location.path("/add-edit-contact").search({ id: contact.id });
-      $scope.closeModal(); 
+      $scope.closeModal();
     };
 
     $scope.logOut = function () {
