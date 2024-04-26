@@ -1,0 +1,16 @@
+<div ng-controller="ContactListController">
+  <button class="btnExport" ng-click="exportData()">Export</button>
+  <h2>Contact List</h2>
+  <div class="contact-grid">
+    <div
+      class="contact-card"
+      ng-repeat="contact in contacts track by contact.id"
+      contact-card
+      contact="contact"
+    ></div>
+  </div>
+  <a style="color: whitesmoke;" href="#!/add-edit-contact">Add New Contact</a>
+  <hr />
+  <hr />
+  <button class="btnLogOut" ng-click="logOut()">Log Out</button>
+</div>

@@ -1,0 +1,21 @@
+<div class="contact-card" ng-dblclick="$parent.openModal(contact)">
+  <img
+    ng-if="!contact.image"
+    src="defaultPic.png"
+    alt="{{ contact.name }}"
+    class="contact-img"
+  />
+  <img
+    ng-if="contact.image"
+    ng-src="{{ contact.image }}"
+    alt="{{ contact.name }}"
+    class="contact-img"
+  />
+  <div class="contact-info"><strong>Name:</strong> {{ contact.name }}</div>
+  <div class="contact-info"><strong>Email:</strong> {{ contact.email }}</div>
+  <div class="contact-info"><strong>Phone:</strong> {{ contact.phone }}</div>
+  <div>
+    <button class="btnUpdateOrDelete" ng-click="$parent.editContact(contact)">Edit</button>
+    <button class="btnUpdateOrDelete" ng-click="$parent.deleteContact(contact)">Delete</button>
+  </div>
+</div>

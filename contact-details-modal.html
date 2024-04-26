@@ -1,0 +1,22 @@
+<div class="modalContainer">
+  <div style="padding-left: 180px;" class="modal-header">
+    <h3 style="padding-top: 10px;" class="modal-title"><u>Contact Details</u></h3>
+  </div>
+  <div style="padding-left: 190px;" class="modal-body">
+    <div>
+      <p style="display: inline-block;">Name:</p>
+      <p style="display: inline-block;">{{ contact.name }}</p>
+    </div>
+    <div>
+      <p style="display: inline-block;">Email:</p>
+      <p style="display: inline-block;">{{ contact.email }}</p>
+    </div>
+    <div>
+      <p style="display: inline-block;">Phone:</p>
+      <p style="display: inline-block;">{{ contact.phone }}</p>
+    </div>
+  </div>
+  <div style="padding-left: 220px; margin-top: 20px;" class="modal-footer">
+    <button class="btnClose" ng-click="cancel()">Close</button>
+  </div>
+</div>

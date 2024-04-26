@@ -1,0 +1,30 @@
+<h2>Sign Up</h2>
+<form ng-submit="signUp()" autocomplete="off">
+  <div>
+    <label>Email:</label>
+    <input type="email" placeholder="abc@xyz.com" ng-model="signUpData.email" />
+  </div>
+  <br />
+  <div>
+    <label>Password:</label>
+    <input type="password" placeholder="****" ng-model="signUpData.password" />
+  </div>
+  <br />
+  <div>
+    <label>Confirm Password:</label>
+    <input
+      type="password"
+      placeholder="****"
+      ng-model="signUpData.confirmPassword"
+    />
+    <p class="error" ng-show="passwordsMatchError">Passwords do not match.</p>
+  </div>
+  <br />
+  <button class="btnSignUp" type="submit" (click)="form.reset();event.preventDefault();">
+    Sign Up
+  </button>
+  &nbsp; <button class="btnClear" type="reset">Clear</button>
+</form>
+<p class="error" ng-show="error">{{ error }}</p>
+<small>{{errorSignUpEmail}}</small>
+<p>Already have an account? <a href="#!/sign-in">Sign In</a></p>

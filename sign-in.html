@@ -1,0 +1,27 @@
+<h2>Sign In</h2>
+<form ng-submit="signIn()" autocomplete="off">
+  <div>
+    <label>Email:</label>
+    <input
+      type="email"
+      placeholder="ex: abc@xyz.com"
+      ng-model="signInData.email"
+    />
+  </div>
+  <br />
+  <div>
+    <label>Password:</label>
+    <input
+      type="password"
+      placeholder="******"
+      ng-model="signInData.password"
+    />
+  </div>
+  <br />
+  <button class="btnSignIN" type="submit" (click)="form.reset();event.preventDefault();">
+    Sign In
+  </button>
+  &nbsp; <button class="btnClear" type="reset">Clear</button>
+</form>
+<p class="error" ng-show="error">{{ error }}</p>
+<p>Don't have an account? <a href="#!/sign-up">Sign Up</a></p>
